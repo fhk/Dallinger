@@ -4,6 +4,8 @@ import os
 
 import dallinger
 
+import dallinger
+
 
 class TestExamples(object):
 
