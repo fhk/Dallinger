@@ -453,18 +453,24 @@ def deploy_sandbox_shared_setup(verbose=True, app=None, web_procs=1, exp_config=
     })
     config.write_config()
 
-    subprocess.check_call("git add config.txt", stdout=out, shell=True),
+    subprocess.check_call(["git", "add", "config.txt"], stdout=out),
     time.sleep(0.25)
-    subprocess.check_call(
-        'git commit -m "Save URLs for database and notifications"',
-        stdout=out,
-        shell=True)
+
+    subprocess.check_call([
+        "git",
+        "commit",
+        "-m",
+        '"Save URLs for database and notifications"',
+    ], stdout=out)
     time.sleep(0.25)
 
     # Launch the Heroku app.
     log("Pushing code to Heroku...")
     subprocess.check_call(
-        "git push heroku HEAD:master", stdout=out, stderr=out, shell=True)
+        ["git", "push", "heroku", "HEAD:master"],
+        stdout=out,
+        stderr=out,
+    )
 
     log("Scaling up the dynos...")
     scale_up_dynos(app_name(id))
