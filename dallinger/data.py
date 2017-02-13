@@ -126,11 +126,12 @@ def copy_local_to_csv(local_db, path, scrub_pii=False):
     """Copy a local database to a set of CSV files."""
     for table in table_names:
         csv_path = os.path.join(path, "{}.csv".format(table))
-        subprocess.check_call(
-            "psql -d " + local_db +
-            " --command=\"\\copy " + table + " to \'" +
-            csv_path + "\' csv header\"",
-            shell=True)
+        subprocess.check_call([
+            "psql",
+            "-d",
+            local_db,
+            "--command=\"\\copy " + table + " to \'" + csv_path + "\' csv header\""
+        ])
 
         if table is "participant" and scrub_pii:
             with open(csv_path, 'rb') as input:
