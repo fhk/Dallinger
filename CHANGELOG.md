@@ -1,5 +1,13 @@
 # Change Log
 
+## [v3.0.0](https://github.com/dallinger/dallinger/tree/v3.0.0) (2016-02-17)
+
+Welcome to Dallinger 3. This update comes with several new features, some of which are breaking changes that will require you to edit your `.dallingerconfig` file and experiment code:
+
+- **BREAKING**. There is now only one configuration module, `dallinger.config`, and...
+
+- **BREAKING**.
+
 ## [v2.7.0](https://github.com/dallinger/dallinger/tree/v2.7.0) (2016-12-10)
 
 - Support for Heroku teams [\#331](https://github.com/Dallinger/Dallinger/pull/331)
