@@ -691,6 +691,10 @@ def verify_package(verbose=True):
             log("✗ {} is MISSING".format(f), chevrons=False, verbose=verbose)
             is_passing = False
 
+    # Check that the configuration is valid and loadable.
+    config = get_config()
+    config.load_config()
+
     # Check the experiment file.
     if os.path.exists("experiment.py"):
 
