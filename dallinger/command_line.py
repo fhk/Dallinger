@@ -327,6 +327,7 @@ def deploy_sandbox_shared_setup(verbose=True, app=None, web_procs=1, exp_config=
     # Log in to Heroku if we aren't already.
     log("Making sure that you are logged in to Heroku.")
     heroku.log_in()
+    config.set("heroku_auth_token", heroku.auth_token())
     click.echo("")
 
     # Change to temporary directory.
@@ -406,11 +407,8 @@ def deploy_sandbox_shared_setup(verbose=True, app=None, web_procs=1, exp_config=
         "heroku config:set dallinger_email_key=" +
         quote(config.get('dallinger_email_password')),
 
-        "heroku config:set heroku_email_address=" +
-        quote(config.get('heroku_email_address')),
-
-        "heroku config:set heroku_password=" +
-        quote(config.get('heroku_password')),
+        "heroku config:set heroku_auth_token=" +
+        quote(config.get('heroku_auth_token')),
 
         "heroku config:set whimsical={}".format(whimsical),
     ]
