@@ -153,3 +153,33 @@ class TestDebugServer(object):
             p.read()
         finally:
             shutil.rmtree(fake_home)
+
+    def test_warning_if_no_heroku_present(self):
+        # Heroku requires a home directory to start up
+        # We create a fake one using tempfile and set it into the
+        # environment to handle sandboxes on CI servers
+        fake_home = tempfile.mkdtemp()
+        # Make sure debug server starts without error
+        try:
+            environ = os.environ.copy()
+            # Remove the path item that has heroku in it
+            path_items = environ['PATH'].split(':')
+            path_items = [
+                item for item in path_items
+                if not os.path.exists(os.path.join(item, 'heroku'))
+            ]
+            environ.update({
+                'HOME': fake_home,
+                'PATH': ':'.join(path_items)
+            })
+            p = pexpect.spawn(
+                'dallinger',
+                ['debug', '--verbose'],
+                env=environ,
+            )
+            p.logfile = sys.stdout
+            p.expect_exact("Couldn't start Heroku for local debugging", timeout=120)
+            p.sendcontrol('c')
+            p.read()
+        finally:
+            shutil.rmtree(fake_home)
