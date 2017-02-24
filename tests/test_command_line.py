@@ -3,7 +3,10 @@
 import filecmp
 import os
 import pexpect
+import shutil
 import subprocess
+import sys
+import tempfile
 from pytest import raises
 from ConfigParser import SafeConfigParser, NoOptionError
 from dallinger.compat import unicode
@@ -131,8 +134,22 @@ class TestDebugServer(object):
         os.chdir(self.orig_dir)
 
     def test_startup(self):
+        # Heroku requires a home directory to start up
+        # We create a fake one using tempfile and set it into the
+        # environment to handle sandboxes on CI servers
+        fake_home = tempfile.mkdtemp()
         # Make sure debug server starts without error
-        p = pexpect.spawn('dallinger', ['debug'])
-        p.expect_exact('Server is running', timeout=120)
-        p.sendcontrol('c')
-        p.read()
+        try:
+            environ = os.environ.copy()
+            environ.update({'HOME': fake_home})
+            p = pexpect.spawn(
+                'dallinger',
+                ['debug', '--verbose'],
+                env=environ,
+            )
+            p.logfile = sys.stdout
+            p.expect_exact('Server is running', timeout=120)
+            p.sendcontrol('c')
+            p.read()
+        finally:
+            shutil.rmtree(fake_home)
