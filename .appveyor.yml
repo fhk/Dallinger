@@ -11,6 +11,8 @@ environment:
 build: false
 
 install:
+  - ps: "wget https://github.com/cloudify-cosmo/appveyor-utils/archive/master.zip -OutFile ./master.zip"
+  - "7z e master.zip */appveyor/* -oappveyor"
   - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - pip install -r requirements.txt
 
